@@ -1,5 +1,6 @@
 package Pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -30,8 +31,7 @@ public class FirstPage {
 	}	
 	
 	public void launchPage() {
-		driver.get(url);
-		System.out.println(driver.getCurrentUrl());
+		driver.get(url);		 
 	}
 	
 	/**
@@ -43,7 +43,11 @@ public class FirstPage {
 	 	searchField.sendKeys(edrpouCode);
 	    wait.until(ExpectedConditions.visibilityOf(keyWordSuggest));
 		keyWordSuggest.click();
-		System.out.println(driver.getCurrentUrl());
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#result > button")));
+	}
+	
+	public void directLaunch(String edrpou) {
+		driver.get(url+"tender/search?query="+edrpou);
 	}
 	
 	

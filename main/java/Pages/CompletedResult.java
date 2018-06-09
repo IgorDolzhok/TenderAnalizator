@@ -26,7 +26,7 @@ public class CompletedResult {
 	//@FindBy(xpath = "/html/body/main/div[1]/div[2]/div/div/div/div[12]/div/div/table/tbody/tr[2]/td[1]")
 	private WebElement acceptedCompany;
 	
-	@FindBy(xpath="/html/body/main/div[1]/div[2]/div/div/div/div[6]/div/div/table/tbody/tr/td[1]")
+	@FindBy(xpath ="")
 	private WebElement acceptedSingleCompany;
 	 
 	@FindBy(xpath="//table[@class='table table-striped margin-bottom small-text long']/tbody/tr/td[1]")
@@ -72,10 +72,10 @@ public class CompletedResult {
            .isEmpty()!=true) {
     	              result = acceptedCompany.getText();
     	}else if(driver.findElements(By.xpath("//table[@class='table table-striped margin-bottom small-text']/tbody/tr/td[1]"))
-    			.isEmpty()!=true){
-    		          result = acceptedSingleCompany.getText();
+    			.isEmpty()!=true){    		
+    		    result = acceptedSingleCompany.getText();
     	}else {
-    		          result = acceptedSingleCompany1.getText();
+    		     result = acceptedSingleCompany1.getText();
     	}
     	if(result.indexOf("#")>=0) {    		 
     		result=result.substring(0, result.indexOf("#"));

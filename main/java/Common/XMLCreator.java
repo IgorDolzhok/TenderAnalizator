@@ -23,13 +23,13 @@ public class XMLCreator {
 		super();
 	}
 	
-	public void createXMLCompletedTendersLinks(List<String> links) {
+	public void createXMListOfLinks(List<String> links, String rootName, String fileName){
 		try {
 			DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbfactory.newDocumentBuilder();
 			Document doc = dBuilder.newDocument();
 			//create root element
-			Element rootElement = doc.createElement("LinksCompleted");
+			Element rootElement = doc.createElement(rootName);
 			doc.appendChild(rootElement);
 			//create elements with links
 			for(int x=0; x<links.size(); x++) {
@@ -45,7 +45,7 @@ public class XMLCreator {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("Files/Links"));
+			StreamResult result = new StreamResult(new File("Files/"+fileName));
 			transformer.transform(source, result);
 			//output to console for testing
 			StreamResult consoleResult = new StreamResult(System.out);
@@ -54,6 +54,26 @@ public class XMLCreator {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createXMLfinished(List<String> links) {
+		String rootName = "FinishedBargains";
+		String filename = "Finished";
+		createXMListOfLinks(links, rootName, filename);
+	}
+	
+	public void createXMLQualified(List<String> links) {
+		String rootName = "QualifiedBargains";
+		String filename = "Qualified";
+		createXMListOfLinks(links, rootName, filename);
+	}
+	
+	public void createXMLPropositionsViewed(List<String> links) {
+		String rootName = "Viewedpropositions";
+		String filename = "ViewedPropositions";
+		createXMListOfLinks(links, rootName, filename);
+	}
+	
+	 
 	
 	public List<String> readXMLsavedCompletedtendersLinks() {
 		List<String> results = new ArrayList(); 
