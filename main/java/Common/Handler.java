@@ -33,6 +33,14 @@ public class Handler {
     	return str;
     }
     
+    public String getVinnerCodeFromOuterHTML(String html) {
+    	 html= html.replaceAll("\\s", "");
+		 int i = html.indexOf("#");
+		 int x = html.indexOf("</td>");
+		 String result = html.substring(i+1, x);
+		 return result;
+    }
+    
     
     
     

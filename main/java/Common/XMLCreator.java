@@ -57,32 +57,45 @@ public class XMLCreator {
 	
 	public void createXMLfinished(List<String> links) {
 		String rootName = "FinishedBargains";
-		String filename = "Finished";
+		String filename = "Finished.xml";
 		createXMListOfLinks(links, rootName, filename);
 	}
 	
 	public void createXMLQualified(List<String> links) {
 		String rootName = "QualifiedBargains";
-		String filename = "Qualified";
+		String filename = "Qualified.xml";
 		createXMListOfLinks(links, rootName, filename);
 	}
 	
 	public void createXMLPropositionsViewed(List<String> links) {
 		String rootName = "Viewedpropositions";
-		String filename = "ViewedPropositions";
+		String filename = "ViewedPropositions.xml";
 		createXMListOfLinks(links, rootName, filename);
 	}
 	
-	 
+	public List<String> readXMLfinished(){
+		String filename="Finished.xml";
+		return readXMLinks(filename);
+	}
 	
-	public List<String> readXMLsavedCompletedtendersLinks() {
+	public List<String> readXMLQualified(){
+		String filename="Qualified.xml";
+		return readXMLinks(filename);
+	}
+	
+	public List<String> readXMLPropositionsViewed(){
+		String filename="ViewedPropositions.xml";
+		return readXMLinks(filename);
+	}	 
+	
+	public List<String> readXMLinks(String fileName) {
 		List<String> results = new ArrayList(); 
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(new File("Files/Links.xml"));
+			Document doc = dBuilder.parse(new File("Files/"+fileName));
 			doc.getDocumentElement().normalize();			
-			System.out.println("Root element: "+doc.getDocumentElement().getNodeName());
+			//System.out.println("Root element: "+doc.getDocumentElement().getNodeName());
 			NodeList nList = doc.getElementsByTagName("Item");	
 			for(int b= 0; b<nList.getLength(); b++) {
 			Node oneItem = nList.item(b);

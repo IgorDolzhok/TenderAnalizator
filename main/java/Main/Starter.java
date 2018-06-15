@@ -18,9 +18,7 @@ import Pages.FirstPage;
 import Pages.Results;
 import SQL.Connector;
 /**
- * TO DO: 1. Class for creating 3 different XML-files for storing links depending on status of bargainings
- *        2. Class for viewing of results of searching request and sorting received results depending on status of bargaining
- *        3. To realise interacting result observing with xml-files
+ * TO DO: 1.Methods to get all necessary values from CompletedResultsPage
  * @author WORK-06
  *
  */
@@ -34,14 +32,12 @@ public class Starter {
 		FirstPage firstPage = new FirstPage(driver);
 		XMLCreator xml = new XMLCreator();
 		Results results = new Results(driver);
-		String edrpouAES = "20915546";
-		
-		
+		String edrpouAES = "20915546";				
 		firstPage.launchPage();
 		firstPage.search(edrpouAES, wait);
 		results.sortingresults(xml);
 		 
-		
+		 
 		 
 		
 		
