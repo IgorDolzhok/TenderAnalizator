@@ -28,7 +28,12 @@ public class Experiments {
 		List<String> links = xml.readXMLQualified();
 		//for(String link: links) {
 			result.launch(links.get(3));
-			System.out.println(result.getVinnerName(handler));
+			System.out.println(result.getVinnerName());
+			System.out.println(result.getItemOfTender());
+			System.out.println(result.getPrice(handler));
+			System.out.println(result.getDate(links.get(3), handler));
+			System.out.println(result.getExpectedPrice(handler));
+			System.out.println(result.getCurrency(handler));
 		//};
 		 
 	}

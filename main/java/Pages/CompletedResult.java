@@ -16,13 +16,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Common.Handler;
 import Common.ResultEntry;
-
+/**
+ * presents Page with QualificationOfVinner (" вал≥ф≥кац≥€ переможц€")
+ * @author WORK-06
+ *
+ */
 public class CompletedResult {
 	
 	WebDriver driver;	 
 
 	@FindBy(className="container")
 	WebElement container;
+	
+	@FindBy(xpath="/html/body/main/div[1]/div[1]/div/div/div[1]")
+	WebElement itemOfTender;
+	
+	@FindBy(xpath="/html/body/main/div[1]/div[1]/div/div/div[2]/div/div/strong")
+	WebElement expectedPrice;
+	
 
 	public CompletedResult(WebDriver driver) {
 		this.driver = driver;
@@ -35,24 +46,67 @@ public class CompletedResult {
 	
 	public String getId() {
 		 return driver.getCurrentUrl();		
-	}
-	
+	}	
+	/**
+	 * @return last table in division "Container"
+	 */
 	public WebElement getVinnerTable() {
-		List <WebElement> tables = driver.findElements(By.cssSelector("table[class*='striped']"));
-		
-		return tables.get(tables.size()-1);//driver.findElement(By.cssSelector("table[class*='striped']"));
-		 
+		List <WebElement> tables = driver.findElements(By.cssSelector("table[class*='striped']"));		
+		return tables.get(tables.size()-1);		 
 	}   
 	 
-	public String getVinnerName(Handler handler) {
+	public String getVinnerCode(Handler handler) {
 		 WebElement table = getVinnerTable();		 
 		 String outerHtml = table.getAttribute("outerHTML");
 		 String code = handler.getVinnerCodeFromOuterHTML(outerHtml);		
 		 return code;
 	}
 	
+	public String getVinnerName() {
+		WebElement table = getVinnerTable();
+		String name = table.findElement(By.cssSelector("tbody > tr > td:nth-child(1)")).getText();
+		if(name.contains("#")) {
+			name=name.substring(0, name.indexOf("#"));
+		}
+		return name;
+	}
 	
+    public String getItemOfTender() {
+    	String item = itemOfTender.getText();      	
+    	return item;
+    }
+    
+    public int getPrice(Handler handler) {
+    	String value = getPriceAndCurrency();
+    	return handler.getPrice(value);
+    }
 	
+	public String getDate(String url, Handler handler) {
+		return handler.getDateFromUrl(url);
+	}
+	
+	public int getExpectedPrice(Handler handler) {
+		String result = expectedPrice.getText();
+		return  handler.getPrice(result);
+	}
+	
+	public String getCurrency(Handler handler) {
+		 String value = getPriceAndCurrency();
+		 return handler.getCurrency(value);
+	}
+	
+	public String getPriceAndCurrency() {
+		WebElement table = getVinnerTable();
+    	List<WebElement> columns = table.findElements(By.tagName("th"));
+    	int index=0;
+    	for(int x= columns.size(); x>0; x--) {
+    		if(columns.get(x-1).getText().contains("ропозиц≥€")==true) {
+    			index=x;
+    		}
+    	}
+    	String value = table.findElement(By.cssSelector("tbody > tr > td:nth-child("+index+")")).getText();		
+		return value;
+	}
     
 
 }

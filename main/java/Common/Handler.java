@@ -15,7 +15,8 @@ public class Handler {
 	}
 	
 	public int getPrice(String price) {
-		return Integer.parseInt(price.substring(18, price.indexOf(",")).replaceAll("\\s",""));
+		String value = price.substring(0, price.indexOf(",")).replaceAll("\\s", "");
+		return Integer.parseInt(value);
 	}
 	
 	
@@ -39,6 +40,11 @@ public class Handler {
 		 int x = html.indexOf("</td>");
 		 String result = html.substring(i+1, x);
 		 return result;
+    }
+    
+    public String getDateFromUrl(String url) {
+    	String date = url.substring(url.indexOf("2"), url.indexOf("2")+10);
+    	return date;
     }
     
     
