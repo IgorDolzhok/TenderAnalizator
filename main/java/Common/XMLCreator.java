@@ -48,8 +48,8 @@ public class XMLCreator {
 			StreamResult result = new StreamResult(new File("Files/"+fileName));
 			transformer.transform(source, result);
 			//output to console for testing
-			StreamResult consoleResult = new StreamResult(System.out);
-			transformer.transform(source, consoleResult);
+			//StreamResult consoleResult = new StreamResult(System.out);
+			//transformer.transform(source, consoleResult);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -64,13 +64,13 @@ public class XMLCreator {
 	public void createXMLQualified(List<String> links) {
 		String rootName = "QualifiedBargains";
 		String filename = "Qualified.xml";
-		createXMListOfLinks(links, rootName, filename);
+		createXMListOfLinks(links, rootName, filename);		 
 	}
 	
 	public void createXMLPropositionsViewed(List<String> links) {
 		String rootName = "Viewedpropositions";
 		String filename = "ViewedPropositions.xml";
-		createXMListOfLinks(links, rootName, filename);
+		createXMListOfLinks(links, rootName, filename);		 
 	}
 	
 	public List<String> readXMLfinished(){

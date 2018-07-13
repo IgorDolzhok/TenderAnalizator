@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Common.Handler;
+import Common.ParticipantEntry;
 import Common.ResultEntry;
 import Pages.CompletedResult;
 import Pages.Results;
@@ -84,6 +85,29 @@ public class Connector {
             }catch(SQLException e) {
              e.printStackTrace();
             }            
+	}
+	
+	public void insertDataIntoParticipants(List<ParticipantEntry> loosers, Handler handler) {
+		queryBuilder = new StringBuilder();
+		queryBuilder.append("insert into participants values");
+		for(int x=0; x<loosers.size(); x++) {
+			if(x!=(loosers.size()-1)) {
+				queryBuilder.append("('"+loosers.get(x).getId()+"',"+loosers.get(x).getPrice()+", '"+loosers.get(x).getCompanyName(handler)+"'),");
+			}else {
+				queryBuilder.append("('"+loosers.get(x).getId()+"',"+loosers.get(x).getPrice()+", '"+loosers.get(x).getCompanyName(handler)+"')");
+			}
+		}
+		try {
+			Statement statement = this.connection.createStatement();
+			try {
+				statement.executeUpdate(queryBuilder.toString());
+			}catch(SQLIntegrityConstraintViolationException v) {
+				v.printStackTrace();
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public String getDbUrl() {

@@ -17,7 +17,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Common.Handler;
 import Common.XMLCreator;
-
+/**
+ * this class represents the page appearing after searching by particular parameters and containing list of last tenders results
+ *  @author WORK-06
+ *
+ */
 public class Results {
      
 	 WebDriver driver;
@@ -37,6 +41,7 @@ public class Results {
 	}
 	
 	/**
+	 * clicking on button more in order to go down in the page with results
 	 * waiter must be optimizated
 	 * @param wait
 	 * @throws InterruptedException
@@ -46,9 +51,14 @@ public class Results {
 	    Thread.sleep(1000);
 	    
 	}
-	
+	/**
+	 * 
+	 * have to be optimised, because it would repeat searching between results which are already found
+	 * @return whole the page with all results after particular amount of clicks
+	 * @throws InterruptedException
+	 */
 	public List<Element> getAllResultsDocument() throws InterruptedException {
-		for(int i=0; i<5; i++ ) {
+		for(int i=0; i<10; i++ ) {
 			clickMore();
 		}
 		String html = result.getAttribute("innerHTML");
@@ -59,23 +69,29 @@ public class Results {
 		return items;
 	}
 	
+	/**
+	 * record 3 xml-files with following types of results: "Завершен", "Кваліфікація переможця", "Пропозиції розглянуті"
+	 * recording occurs with help XMLCreator methods: createXMLfinished, createXMLQualified, createXMLPropositionsViewed
+	 * @param xml
+	 * @throws InterruptedException
+	 */
 	public void sortingresults(XMLCreator xml) throws InterruptedException {
 		List<Element> items = getAllResultsDocument();
+		 
 		List<String> completedLinks= new ArrayList();
 		List<String> qualified = new ArrayList();
 		List<String> viewedPropositions = new ArrayList();
 		for(Element e: items) {
-			if(e.select("li[class='marked']").text().contains("авершено")==true) {
+			if(e.select("li[class='marked']").text().contains("авершен")==true) {
 			     completedLinks.add(e.select("a[class='items-list--header']").attr("href"));
 			}else if(e.select("li[class='marked']").text().contains("валіфікація переможця")==true) {
 			     qualified.add(e.select("a[class='items-list--header']").attr("href"));
 			}else if(e.select("li[class='marked']").text().contains("опозиції розглянуті")==true) {
 			     viewedPropositions.add(e.select("a[class='items-list--header']").attr("href"));
-		}
-		xml.createXMLfinished(completedLinks);
-		xml.createXMLQualified(qualified);
-		xml.createXMLPropositionsViewed(viewedPropositions);
-		
+		}		 
+		xml.createXMLfinished(completedLinks);		 
+		xml.createXMLQualified(qualified);		 
+		xml.createXMLPropositionsViewed(viewedPropositions);		 	
 	}
    
 	
