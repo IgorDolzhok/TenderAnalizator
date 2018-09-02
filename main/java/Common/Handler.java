@@ -26,11 +26,11 @@ public class Handler {
 	}
     
     public String removeSpecSymbols(String str) {
-    	System.out.println("Input: "+str); 
+    	//System.out.println("Input: "+str); 
     	str = str.replace("'", " ");
     	//str = str.replaceAll("/(", " ");
     	//str = str.replaceAll("/)", " ");
-    	System.out.println("Output: "+str);
+    	//System.out.println("Output: "+str);
     	return str;
     }
     

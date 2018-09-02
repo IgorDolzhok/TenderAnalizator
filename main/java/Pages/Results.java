@@ -58,7 +58,7 @@ public class Results {
 	 * @throws InterruptedException
 	 */
 	public List<Element> getAllResultsDocument() throws InterruptedException {
-		for(int i=0; i<10; i++ ) {
+		for(int i=0; i<15; i++ ) {
 			clickMore();
 		}
 		String html = result.getAttribute("innerHTML");
@@ -77,28 +77,35 @@ public class Results {
 	 */
 	public void sortingresults(XMLCreator xml) throws InterruptedException {
 		List<Element> items = getAllResultsDocument();
+		
+		List<String> completedLinksOld = xml.readXMLfinished();
+		List<String> qualifiedOld = xml.readXMLQualified();
+		List<String> viewedPropositionsOld = xml.readXMLPropositionsViewed();
 		 
-		List<String> completedLinks= new ArrayList();
-		List<String> qualified = new ArrayList();
-		List<String> viewedPropositions = new ArrayList();
+		List<String> completedLinksNew= new ArrayList();
+		List<String> qualifiedNew = new ArrayList();
+		List<String> viewedPropositionsNew = new ArrayList();
 		for(Element e: items) {
-			if(e.select("li[class='marked']").text().contains("авершен")==true) {
-			     completedLinks.add(e.select("a[class='items-list--header']").attr("href"));
-			}else if(e.select("li[class='marked']").text().contains("валіфікація переможця")==true) {
-			     qualified.add(e.select("a[class='items-list--header']").attr("href"));
-			}else if(e.select("li[class='marked']").text().contains("опозиції розглянуті")==true) {
-			     viewedPropositions.add(e.select("a[class='items-list--header']").attr("href"));
+			String link = getLinkFromElement(e);
+			String typeOfTender = getTypeOfTender(e);		 
+			if(typeOfTender.contains("авершен")&&completedLinksOld.contains(link)==false){
+			    completedLinksNew.add(link);
+			}else if(typeOfTender.contains("валіфікація переможця")&&qualifiedOld.contains(link)==false) {
+			     qualifiedNew.add(link);
+			}else if(typeOfTender.contains("опозиції розглянуті")&&viewedPropositionsOld.contains(link)==false) {
+			     viewedPropositionsNew.add(link);
 		}		 
-		xml.createXMLfinished(completedLinks);		 
-		xml.createXMLQualified(qualified);		 
-		xml.createXMLPropositionsViewed(viewedPropositions);		 	
-	}
-   
+		xml.createXMLfinished(completedLinksNew);		 
+		xml.createXMLQualified(qualifiedNew);		 
+		xml.createXMLPropositionsViewed(viewedPropositionsNew);		 	
+	}	
+  }
 	
-	
-	
-	
-	
-	
-}
+  public String getLinkFromElement(Element element) {
+	  return element.select("a[class='items-list--header']").attr("href");
+  }
+  
+  public String getTypeOfTender(Element element) {
+	  return element.select("li[class='marked']").text();
+  }
 }

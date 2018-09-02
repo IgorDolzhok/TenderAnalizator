@@ -1,5 +1,8 @@
 package Main;
 
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,21 +15,26 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Common.Handler;
 import Common.ParticipantEntry;
+import Common.Report;
 import Common.ResultEntry;
 import Common.XMLCreator;
 import Pages.CompletedResult;
 import Pages.FirstPage; 
 import Pages.Results;
 import SQL.Connector;
+import SQL.GetQueryMaker;
+import SQL.QueryMaker;
+ 
 
 /**
- * íàäî îáğàáîòàòü ñòğîêè íà ïğåäìåò ââîäà âñÿêèõ åáàííûõ ñèìâîëîâ
+ *  
  * @author WORK-06
  *
  */
 public class Experiments {
     
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, SQLException, IOException {		 
+		
 		System.setProperty("webdriver.chrome.driver", "Drivers/chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		WebDriverWait wait = new WebDriverWait(driver, 50, 1000);		
@@ -37,9 +45,35 @@ public class Experiments {
 		String edrpouAES = "20915546";				
 		Results res = new Results(driver);
 		Connector con= new Connector();		
-		//getXMLwithResults(firstPage, res, xml, edrpouAES, wait, driver);
-		List<String> links = xml.readXMLQualified();
-		List<ParticipantEntry> loosers= new ArrayList();
+		StringBuilder stringBuilder = new StringBuilder();
+		QueryMaker queryMaker = new QueryMaker(stringBuilder);
+		GetQueryMaker getQueryMaker = new GetQueryMaker(stringBuilder);
+		Report report = new Report();
+		
+		getXMLwithResults(firstPage, res, xml, edrpouAES, wait, driver);
+		List<ResultEntry> results = new ArrayList();
+		List<ParticipantEntry> loosers = new ArrayList();
+		List<String> links = xml.readXMLPropositionsViewed();
+		links.addAll(xml.readXMLQualified());
+		links.addAll(xml.readXMLfinished());
+		for(String link: links) {
+			System.out.println(link);
+			result.launch(link);
+		    loosers.addAll(result.getLoosersName(handler, result.getVinnerName(), link));
+		    results.add(result.createResult(handler, link));
+		}
+		con.insertResultAndParticipants(queryMaker, results, loosers, handler);
+	    /*String query = getQueryMaker.getParticipants("Ô²ÇÈ×ÍÀ ÎÑÎÁÀ-Ï²ÄÏĞÈªÌÅÖÜ ÔÅÎÔ²ËÀÊÒÎÂÀ ÌÀĞÈÍÀ Â²ÊÒÎĞ²ÂÍÀ");
+	    ResultSet resultofQuery= con.selectQuery(query);	     
+	    report.createTableParticipants(resultofQuery);*/		
+		con.closeConnection();
+		}
+	   
+
+		//con.insertDataIntoParticipants(loosers, handler);
+		//con.insertDataIntoResults(results, handler);
+		 
+		/*List<ParticipantEntry> loosers= new ArrayList();
 		List<ResultEntry> results = new ArrayList();
 		for(String link: links) {
 		result.launch(link);
@@ -47,8 +81,11 @@ public class Experiments {
 		results.add(result.createResult(handler, link));		 
 		} 
 		con.insertDataIntoParticipants(loosers, handler);
-		
-	}
+        */		
+//}
+	
+	
+	
 	
 	public static void getXMLwithResults(FirstPage first, Results results, XMLCreator xml, String code, WebDriverWait wait, WebDriver driver) 
 	throws InterruptedException {
@@ -66,7 +103,7 @@ public class Experiments {
 	
 	public static void printResult(CompletedResult result, String link, Handler handler, String url) {
 		result.launch(link);
-		Object[][] loosers = result.getLoosersName(handler, result.getVinnerName());
+		//List<ParticipantEntry> loosers = result.getLoosersName(handler, result.getVinnerName(), url);
 		System.out.println(result.getId(url));
 		System.out.println(result.getVinnerCode(handler));
 		System.out.println(result.getVinnerName());
@@ -74,10 +111,11 @@ public class Experiments {
 		System.out.println(result.getCurrency(handler));
 		System.out.println(result.getPrice(handler));
 	    System.out.println("*******************************************************");
-	    for(int x=0; x<loosers.length; x++) {
-	    	System.out.println(loosers[x][0]+"   "+loosers[x][1]);
-	    }
+	   /* for(int x=0; x<loosers.size(); x++) {
+	    	System.out.println(loosers+"   "+loosers[x][1]);
+	    }*/
 	    System.out.println("*******************************************************");
 	}
 
 }
+

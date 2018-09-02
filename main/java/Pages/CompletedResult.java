@@ -167,43 +167,29 @@ public class CompletedResult {
 	 * @param vinnername
 	 * @return entries about participants without winner(or particular result when there are not any participants except winner). Contains name and price
 	 */
-	public Object[][] getLoosersName(Handler handler, String vinnername){
+	public List<ParticipantEntry> getLoosersName(Handler handler, String vinnername, String link){
 		Object [][] participants = getParticipants(handler);
+		String substring = vinnername.substring(3, vinnername.length()-3);
+		List<ParticipantEntry> result = new ArrayList();
 		if(participants.length<=1) {
-			return new Object[][] {
-				{"Без конкурентов", 0}
-			}; 
-		}
-		Object [][] results = new Object[participants.length-1][2]; 
-		int y=0;
+			result.add(new ParticipantEntry(link, "Без конкурентов", 0));
+			return result; 
+		}else {		 		 
 		for(int x=0; x<participants.length; x++) {
+			System.out.println("Loop #"+x);
 			String name = (String) participants[x][0];
-			String substring = vinnername.substring(5, vinnername.length()-5);
+			//System.out.println("Name length: "+name.length());
 			if(name.contains(substring)==false) {
-				results[y][0]= name;
-				results[y][1]= participants[x][1];
-				y++;
-			}
+			    result.add(new ParticipantEntry(link, name, (Integer) participants[x][1]));
+		 } 
+		 }
+		 if(result.size()==participants.length||(participants.length -result.size())>1) {
+			 System.out.println("Something wrong with link "+link);
+		 }	 
+		 
+		return result;
 		}
-		return results;
-	}
-	/**
-	 * handle Object[][] from getLoosersName
-	 * @param handler
-	 * @param vinnername
-	 * @param link
-	 * @return List of obect of class ParticipantEntry from one tender
-	 */
-	public List<ParticipantEntry> createLoosers(Handler handler, String vinnername, String link){
-		List<ParticipantEntry> loosers = new ArrayList();
-		Object[][] results = getLoosersName(handler, vinnername);
-		for(int x=0; x<results.length; x++) {
-			String name = (String)results[x][0];
-			int price = (Integer) results[x][1];
-			loosers.add(new ParticipantEntry(link, name, price));
-		}
-		return loosers;
-	}
+	}	 
 	
 	public ResultEntry createResult(Handler handler, String url) {
 		return new ResultEntry(getId(url), getVinnerName(), getVinnerCode(handler), getItemOfTender(), getPrice(handler),
